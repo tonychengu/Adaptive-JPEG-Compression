@@ -10,6 +10,9 @@ totalVar = var(X,0,'all');
 for i = 1:8:m
     for j = 1:8:n
         currVar = var(X(i:i+7,j:j+7),0,'all');
+        if (j > 1 && i > 1) && (j < m-8 && i < n-8)
+            currVar = var(X(i-8:i+15,j-8:j+15),0,'all');
+        end
         currVar = currVar / totalVar;
         quality = 1 / (1 + exp(currVar-1));%sigmoid(currVar - totalVar);
         sig_ref(qi, qj) = quality;
