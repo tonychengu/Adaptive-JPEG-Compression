@@ -1,4 +1,4 @@
-function [a q_ref] = myQ(X)
+function [a q_ref] = myQ(X, upper, lower)
 [m, n] = size(X);
 a = zeros(m, n);
 q_ref = zeros(m/8, n/8);
@@ -13,7 +13,7 @@ for i = 1:8:m
         currVar = currVar / totalVar;
         quality = 1 / (1 + exp(currVar-1));%sigmoid(currVar - totalVar);
         sig_ref(qi, qj) = quality;
-        quality = clip(quality, 0.55, 0.1);
+        quality = scale(quality, upper, lower);
         Q = q_factor(quality*100);
         q_ref(qi, qj) = quality*100;
         var_ref(qi, qj) = currVar;
