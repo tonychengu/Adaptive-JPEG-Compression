@@ -12,9 +12,10 @@ for i = 1:8:m
         quality = clip(quality, 0.25, 0.95);
         Q = q_factor(quality*100);
         q_ref(qi, qj) = quality*100;
-        qi = qi+1;
         qj = qj+1;
         a(i:i+7,j:j+7) = Q.* round( (X(i:i+7,j:j+7)./Q) );
     end
+    qi = qi+1;
+    qj = 1;
 end
 end
