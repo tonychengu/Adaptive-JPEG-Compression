@@ -11,13 +11,12 @@ for i = 1:8:m
     for j = 1:8:n
         currVar = var(X(i:i+7,j:j+7),0,'all');
         currVar = currVar / totalVar;
-        quality = 1 / (1 + exp(1 - currVar));%sigmoid(currVar - totalVar);
+        quality = 1 / (1 + exp(currVar-1));%sigmoid(currVar - totalVar);
         sig_ref(qi, qj) = quality;
-        quality = clip(quality, 0.25, 0.95);
+        quality = clip(quality, 0., 0.1);
         Q = q_factor(quality*100);
         q_ref(qi, qj) = quality*100;
         var_ref(qi, qj) = currVar;
-        
         qj = qj+1;
         a(i:i+7,j:j+7) = Q.* round( (X(i:i+7,j:j+7)./Q) );
     end
