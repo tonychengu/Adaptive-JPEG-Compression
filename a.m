@@ -22,17 +22,26 @@ end
 %%
 [m, n] = size(B);
 b = zeros(m, n);
+qi = 1;
+qj = 1;
+quality_ref = zeros(128);
 for i = 1:8:m
     for j = 1:8:n
-        quantity = 1 / (1 + exp(-H_block(round(i/8)+1,round(j/8)+1)/H));
-        Q = q_factor(quantity);
+        %quantity = 1 / (1 + exp(-H_block(round(i/8)+1,round(j/8)+1)/H));
+        quantity = 100 * H_block(round(i/8)+1,round(j/8)+1)/H;
+        [Q, f] = q_factor(quantity);
         b(i:i+7,j:j+7) = Q.* round( (B(i:i+7,j:j+7)./Q) );
+
+        quality_ref(qi, qj) = quantity;
+        qj = qj+1;
     end
+    qi = qi+1;
+    qj = 1;
 end
 %%
 nnz(b)
 idct = @(block_struct) T' * block_struct.data * T;
-Iq = blockproc(B,[8 8],idct);
+Iq = blockproc(b,[8 8],idct);
 figure
 imshow(Iq,[0,255])
 diff1 = log10(norm(I - Iq, 'fro')^2 / norm(I, 'fro')^2);
