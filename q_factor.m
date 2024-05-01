@@ -1,4 +1,4 @@
-function q = q_factor(factor)
+function [q, f] = q_factor(factor)
 % given a quality factor between 0~100
 fqf = exp(6*( (50-factor) / 50 ) * log(2));
 Q = [
@@ -12,4 +12,5 @@ Q = [
     [72	92	95	98	112	100	103	99]
     ];
 q = round(fqf * Q);
+f = fqf;
 return
