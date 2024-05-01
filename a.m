@@ -22,11 +22,13 @@ end
 %%
 [m, n] = size(B);
 b = zeros(m, n);
+q_ref = zeros(m/8,n/8);
 for i = 1:8:m
     for j = 1:8:n
         quantity = 1 / (1 + exp(-H_block(round(i/8)+1,round(j/8)+1)/H));
         Q = q_factor(quantity*100);
         b(i:i+7,j:j+7) = Q.* round( (B(i:i+7,j:j+7)./Q) );
+        q_ref(round(i/8)+1,round(j/8)+1) = quantity*100;
     end
 end
 %%
