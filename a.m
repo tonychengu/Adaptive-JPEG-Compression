@@ -128,6 +128,28 @@ Iq2 = blockproc(b2,[8 8],idct);
 imshow(Iq2,[0,255])
 norm(I-Iq2,2)
 %%
+b4 = zeros(m,n);
+c4 = zeros(m,n);
+r4 = [0];
+q_max = H/H_max;
+q_ref = zeros(m/8,n/8);
+for i = 1:8:m
+    for j = 1:8:n
+        quantity = H_block(round(i/8)+1,round(j/8)+1)/6*100*q_max;
+        q_ref(round(i/8)+1,round(j/8)+1)= quantity;
+        Q = q_factor(quantity);
+        b4(i:i+7,j:j+7) = Q.* round( (B(i:i+7,j:j+7)./Q) );
+        c4(i:i+7,j:j+7) = round(B(i:i+7,j:j+7)./Q);
+        r4 = [r4 run_length(zig_zag_path(round(B(i:i+7,j:j+7)./Q)))];
+    end
+end
+%%
+nnz(b4)
+idct = @(block_struct) T' * block_struct.data * T;
+Iq4 = blockproc(b4,[8 8],idct);
+imshow(Iq4,[0,255])
+log10(norm(I-Iq4,"Fro")^2)
+%%
 Q_50 = q_factor(50);
 aq = blockproc(B,[8 8], @(block_struct) Q_50.* round((block_struct.data) ./ Q_50) );
 idct2 = @(block_struct) T' * block_struct.data * T;
@@ -151,8 +173,11 @@ diff_JPEG = norm(I-aq,2);
 
 
 %%
+m = 1024;
+n = 1024;
 total = 511*511;
 pixel_total = m*n;
 x = round(pixel_total/total);
 y = pixel_total-total*x;
 H_max = (total-y)*log2(x/pixel_total)*x/pixel_total + y*log2((x+1)/pixel_total)*(x+1)/pixel_total;
+H_max = -H_max;
