@@ -1,4 +1,4 @@
-I = imread('man.tiff');
+I = imread('pic/man.tiff');
 I = double(I);
 T = dctmtx(8);
 dct = @(block_struct) T * block_struct.data * T';
