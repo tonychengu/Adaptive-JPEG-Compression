@@ -14,10 +14,13 @@ for i = 1:8:m
 %             currVar = var(X(i-8:i+15,j-8:j+15),0,'all');
 %         end
         quality = 0;
-        if counts > 2
-            quality = upper;
-        elseif counts > 1
-            quality = (upper + lower)/2;
+        % if counts > 2
+        %     quality = upper;
+        % elseif counts > 1
+        %     quality = (upper + lower)/2;
+        if counts > 1
+            en = secondentropy(X(i:i+7,j:j+7));
+            quality = scale(en/6.3, upper, lower);
         else
             groupVar = gVar(seg(i, j));
             %currVar = currVar / groupVar;
